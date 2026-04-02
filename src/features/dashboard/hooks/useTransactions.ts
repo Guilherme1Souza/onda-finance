@@ -1,19 +1,37 @@
 import { useQuery } from '@tanstack/react-query'
 import { useAccountStore } from '@/store/account.store'
-import { getTransactionsService } from '@/features/dashboard/services/account.service'
+import {
+  getAccountService,
+  getTransactionsService,
+} from '@/features/dashboard/services/account.service'
+import { useEffect } from 'react'
 
-export function useTransactions() {
-  const { transactions } = useAccountStore()
+export function useDashboard() {
+  const { setAccount, setTransactions, account, transactions } =
+    useAccountStore()
 
-  const query = useQuery({
-    queryKey: ['transactions'],
-    queryFn: getTransactionsService,
-    initialData: transactions,
+  const accountQuery = useQuery({
+    queryKey: ['account'],
+    queryFn: getAccountService,
   })
 
+  const transactionsQuery = useQuery({
+    queryKey: ['transactions'],
+    queryFn: getTransactionsService,
+  })
+
+  useEffect(() => {
+    if (accountQuery.data) setAccount(accountQuery.data)
+  }, [accountQuery.data, setAccount])
+
+  useEffect(() => {
+    if (transactionsQuery.data) setTransactions(transactionsQuery.data)
+  }, [transactionsQuery.data, setTransactions])
+
   return {
-    transactions: query.data ?? [],
-    isLoading: query.isLoading,
-    error: query.error,
+    account,
+    transactions,
+    isLoading: accountQuery.isLoading || transactionsQuery.isLoading,
+    error: accountQuery.error || transactionsQuery.error,
   }
 }

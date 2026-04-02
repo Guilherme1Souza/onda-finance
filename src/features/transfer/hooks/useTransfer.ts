@@ -22,6 +22,6 @@ export function useTransfer() {
     isSuccess: mutation.isSuccess,
     error: mutation.error,
     reset: mutation.reset,
-    balance: account.balance,
+    balance: account?.balance ?? 0,
   }
 }

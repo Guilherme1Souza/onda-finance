@@ -2,10 +2,13 @@ import { Eye, EyeOff, TrendingUp } from 'lucide-react'
 import { useAccountStore } from '@/store/account.store'
 import { formatCurrency } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth.store'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function BalanceCard() {
   const { account, isBalanceVisible, toggleBalanceVisibility } = useAccountStore()
   const { user } = useAuthStore()
+
+  if (!account) return <BalanceCardSkeleton />
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-green/20 bg-surface p-6">
@@ -56,6 +59,24 @@ export function BalanceCard() {
           <span className="text-xs font-medium font-display text-green">+2.4% este mês</span>
         </div>
       </div>
+    </div>
+  )
+}
+
+export function BalanceCardSkeleton() {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-green/20 bg-surface p-6">
+      <div className="flex items-start justify-between mb-6">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-28" />
+          <Skeleton className="h-4 w-36" />
+        </div>
+        <Skeleton className="h-8 w-8 rounded-lg" />
+      </div>
+      <div className="mb-6">
+        <Skeleton className="h-10 w-48" />
+      </div>
+      <Skeleton className="h-6 w-32 rounded-full" />
     </div>
   )
 }

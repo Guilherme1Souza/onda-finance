@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { setupMockAdapter } from '@/mocks/mock-adapter'
 
 const api = axios.create({
   baseURL: '/api',
@@ -16,9 +17,17 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// Mock adapter intercepta as requests e devolve dados simulados
+setupMockAdapter(api)
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Respostas do mock adapter — extrair a response simulada
+    if (error.__MOCK__) {
+      return error.response
+    }
+
     if (error.response?.status === 401) {
       localStorage.removeItem('@onda:token')
       localStorage.removeItem('@onda:user')

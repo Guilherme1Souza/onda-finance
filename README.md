@@ -1,73 +1,137 @@
-# React + TypeScript + Vite
+### Onda Finance
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação bancária simulada, construída como desafio de front-end.
 
-Currently, two official plugins are available:
+### Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Camada | Tecnologia |
+|---|---|
+| Framework | React 19 + TypeScript 5.9 |
+| Build | Vite 8 |
+| Estilização | Tailwind CSS 4 + CVA |
+| Componentes | Radix UI |
+| Roteamento | React Router v7 |
+| Server state | React Query v5 |
+| Client state | Zustand |
+| Formulários | React Hook Form + Zod |
+| HTTP | Axios |
+| Testes | Vitest + Testing Library |
 
-## React Compiler
+### Como rodar
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Instalar dependências
+npm install
 
-## Expanding the ESLint configuration
+# Dev server
+npm run dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Rodar testes
+npm test
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build de produção
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Credenciais de demo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+Email:  ana@ondafinance.io
+Senha:  senha123
+```
+
+### Estrutura de pastas
+
+```
+src/
+├── components/
+│   ├── ui/                    # Primitivos reutilizáveis (Button, Input, Card, Badge...)
+│   ├── layout/                # Estrutura base da aplicação (AppShell, Sidebar...)
+│   └── shared/                # Componentes transversais (ProtectedRoute, Toaster...)
+├── features/
+│   ├── auth/
+│   │   ├── hooks/             # useAuth
+│   │   ├── pages/             # login-page.tsx
+│   │   ├── schemas/           # login.schema.ts
+│   │   └── services/          # auth.service.ts
+│   ├── dashboard/
+│   │   ├── components/        # balance-card, transaction-item, transaction-list
+│   │   ├── hooks/             # useTransactions
+│   │   ├── pages/             # dashboard-page.tsx
+│   │   └── services/          # account.service.ts
+│   └── transfer/
+│       ├── hooks/             # useTransfer
+│       ├── pages/             # transfer-page.tsx
+│       ├── schemas/           # transfer.schema.ts
+│       └── services/          # transfer.service.ts
+├── hooks/
+│   └── useToast.ts            # Hook global/transversal
+├── lib/
+│   ├── axios.ts               # Instância Axios
+│   ├── query-client.ts        # Config do React Query
+│   └── utils.ts               # Helpers globais
+├── mocks/
+│   └── data.ts                # Dados estáticos de desenvolvimento
+├── router/
+│   └── router.tsx             # Configuração das rotas
+├── store/
+│   ├── auth.store.ts          # Sessão/autenticação
+│   └── account.store.ts       # Saldo/transações/visibilidade
+├── styles/
+│   └── globals.css
+├── test/
+│   ├── setup.ts
+│   ├── account-store.test.ts
+│   ├── login-schema.test.ts
+│   ├── transfer-schema.test.ts
+│   └── utils.test.ts
+├── types/
+│   └── index.ts
+├── App.tsx
+└── main.tsx
+```
+
+### Decisões de arquitetura
+
+- **Estrutura orientada por features**: cada domínio (auth, dashboard, transfer) agrupa sua própria lógica, páginas, schemas e serviços, facilitando manutenção e evolução
+- **Separação entre camadas**: componentes de UI, layout, utilitários e hooks globais ficam fora das features para evitar duplicação
+- **Zustand para estado global**: armazena sessão, saldo, transações e controle de visibilidade
+- **React Query para controle assíncrono**: modela fluxo de carregamento e simula camada de dados próxima a uma API real. Queries usam dados do store como `initialData` para atualização reativa
+- **React Hook Form + Zod**: formulários com validação tipada e desacoplada dos componentes
+- **CVA nos componentes visuais**: permite criar variantes reutilizáveis, escaláveis e tipadas
+- **Mock layer isolada**: `services/` simula latência de rede, fácil de substituir por chamadas reais
+- **Testes unitários**: priorizados em schemas, store e utilitários para validar regras centrais
+
+### Segurança
+
+Como se trata de uma aplicação simulada, alguns pontos de segurança não foram implementados de forma completa. Em um cenário real:
+
+#### Proteção contra engenharia reversa
+
+- Nenhuma regra sensível no front-end: validações críticas, autorização e limites ficariam no back-end
+- Tokens e segredos nunca embarcados no cliente
+- Minificação e otimizações em produção
+- Source maps desabilitados em produção
+- Validação de permissões no servidor
+
+#### Proteção contra vazamento de dados
+
+- Comunicação sempre via HTTPS
+- Armazenamento seguro com cookies HttpOnly, Secure e SameSite
+- Controle de acesso por perfil/permissão
+- Logs sem dados sensíveis
+- Variáveis de ambiente protegidas
+- Tratamento de sessão com expiração automática
+
+### Melhorias futuras
+
+- Integração com API real para autenticação, saldo e transferências
+- Persistência real de sessão com estratégia segura de autenticação
+- Testes de integração e testes de componentes com fluxos completos
+- Feedback visual mais rico para loading, erro e sucesso
+- Paginação e filtros de transações
+- Acessibilidade aprimorada com navegação por teclado e atributos ARIA
+- Internacionalização e formatação dinâmica de moeda/data
+- Cobertura de testes e pipeline de CI para validação automática
+- Controle de permissões e perfis de usuário
+- Observabilidade e monitoramento de erros

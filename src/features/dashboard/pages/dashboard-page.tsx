@@ -1,9 +1,10 @@
 import { ArrowLeftRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { BalanceCard } from '../components/balance/balance-card.tsx'
-import { TransactionList } from '../components/transaction/transaction-list.tsx'
+import { BalanceCard, BalanceCardSkeleton } from '../components/balance/balance-card.tsx'
+import { TransactionList, TransactionListSkeleton } from '../components/transaction/transaction-list.tsx'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/store/auth.store'
+import { useDashboard } from '../hooks/useTransactions'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -15,6 +16,7 @@ function getGreeting() {
 export function DashboardPage() {
   const { user } = useAuthStore()
   const firstName = user?.name?.split(' ')[0] ?? 'usuário'
+  const { isLoading } = useDashboard()
 
   return (
     <div className="min-h-dvh px-8 py-8">
@@ -38,12 +40,12 @@ export function DashboardPage() {
 
       {/* Balance */}
       <div className="mb-6 animate-fade-in" style={{ animationDelay: '80ms', opacity: 0 }}>
-        <BalanceCard />
+        {isLoading ? <BalanceCardSkeleton /> : <BalanceCard />}
       </div>
 
       {/* Transactions */}
       <div className="animate-fade-in" style={{ animationDelay: '160ms', opacity: 0 }}>
-        <TransactionList />
+        {isLoading ? <TransactionListSkeleton /> : <TransactionList />}
       </div>
     </div>
   )
