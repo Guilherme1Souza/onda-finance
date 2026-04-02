@@ -1,12 +1,13 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { LoginPage } from '@/features/auth/pages/login-page'
+import { DashboardPage } from '@/features/dashboard/pages/dashboard-page'
 import { AppShell } from '@/components/layout/app-shell'
 import { ProtectedRoute } from '@/components/shared/protected-route'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/dashboard" replace />,
   },
   {
     path: '/login',
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/dashboard',
-            element: <div className="p-8 text-text-h">Dashboard</div>,
+            element: <DashboardPage />,
           },
         ],
       },
@@ -28,6 +29,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/" replace />,
   },
 ])
