@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.ts';
+
+@theme {
+  --radius: 0.75rem;
+
+  /* Colors */
+  --color-bg: #080b0a;
+  --color-surface: #161d18;
+  --color-surface2: #1c2620;
+  --color-border: rgba(36, 228, 120, 0.12);
+  --color-green: #24e478;
+  --color-green-dim: #1ab85e;
+  --color-green-glow: rgba(36, 228, 120, 0.15);
+  --color-text: #e8f0eb;
+  --color-text-muted: #7a9982;
+  --color-text-subtle: #4a6b54;
+  --color-danger: #ef4444;
+
+  /* Fonts */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Border radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Shadows */
+  --shadow-glow: 0 0 24px rgba(36, 228, 120, 0.15);
+  --shadow-glow-sm: 0 0 12px rgba(36, 228, 120, 0.10);
+  --shadow-glow-lg: 0 0 48px rgba(36, 228, 120, 0.20);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-slide-in: slide-in 0.3s ease-out forwards;
+  --animate-shimmer: shimmer 2s infinite linear;
+
+  /* Background images */
+  --bg-image-green-gradient: linear-gradient(135deg, #24e478, #1ab85e);
+  --bg-image-surface-gradient: linear-gradient(180deg, #161d18, #0f1612);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100dvh;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(36, 228, 120, 0.06) 0%, transparent 70%);
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: rgba(36, 228, 120, 0.2);
+  color: #24e478;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #080b0a; }
+::-webkit-scrollbar-thumb { background: rgba(36, 228, 120, 0.2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(36, 228, 120, 0.35); }
+
+/* ── Utilities ─────────────────────────────────────────────── */
+
+@utility card-surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 0.75rem);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+@utility green-glow-text {
+  text-shadow: 0 0 20px rgba(36, 228, 120, 0.4);
+}
