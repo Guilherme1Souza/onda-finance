@@ -30,6 +30,14 @@ export interface Account {
   userId: string
 }
 
+// ─── Transfer ─────────────────────────────────────────────────────────────────
+export interface TransferPayload {
+  recipientName: string
+  recipientAccount: string
+  amount: number
+  description?: string
+}
+
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 export interface LoginPayload {
   email: string
@@ -39,4 +47,11 @@ export interface LoginPayload {
 export interface AuthResponse {
   user: User
   token: string
+}
+
+// ─── API ──────────────────────────────────────────────────────────────────────
+export interface ApiError {
+  message: string
+  code?: string
+  status?: number
 }
