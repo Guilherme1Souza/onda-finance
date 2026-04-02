@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useAccountStore } from '@/store/account.store'
 import { transferService } from '@/features/transfer/services/transfer.service'
 import type { TransferPayload } from '@/types'
 
 export function useTransfer() {
-  const queryClient = useQueryClient()
   const { deductBalance, addTransaction, account } = useAccountStore()
 
   const mutation = useMutation({
@@ -12,7 +11,6 @@ export function useTransfer() {
     onSuccess: (transaction, variables) => {
       deductBalance(variables.amount)
       addTransaction(transaction)
-      queryClient.invalidateQueries({ queryKey: ['transactions'] })
     },
   })
 

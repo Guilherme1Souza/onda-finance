@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type { Transaction, Account } from '@/types'
 
 interface AccountState {
@@ -12,25 +13,32 @@ interface AccountState {
   addTransaction: (tx: Transaction) => void
 }
 
-export const useAccountStore = create<AccountState>((set) => ({
-  account: null,
-  transactions: [],
-  isBalanceVisible: true,
+export const useAccountStore = create<AccountState>()(
+  persist(
+    (set) => ({
+      account: null,
+      transactions: [],
+      isBalanceVisible: true,
 
-  setAccount: (account) => set({ account }),
+      setAccount: (account) => set({ account }),
 
-  setTransactions: (transactions) => set({ transactions }),
+      setTransactions: (transactions) => set({ transactions }),
 
-  toggleBalanceVisibility: () =>
-    set((state) => ({ isBalanceVisible: !state.isBalanceVisible })),
+      toggleBalanceVisibility: () =>
+        set((state) => ({ isBalanceVisible: !state.isBalanceVisible })),
 
-  deductBalance: (amount) =>
-    set((state) => ({
-      account: state.account
-        ? { ...state.account, balance: state.account.balance - amount }
-        : state.account,
-    })),
+      deductBalance: (amount) =>
+        set((state) => ({
+          account: state.account
+            ? { ...state.account, balance: state.account.balance - amount }
+            : state.account,
+        })),
 
-  addTransaction: (tx) =>
-    set((state) => ({ transactions: [tx, ...state.transactions] })),
-}))
+      addTransaction: (tx) =>
+        set((state) => ({ transactions: [tx, ...state.transactions] })),
+    }),
+    {
+      name: '@onda:account',
+    },
+  ),
+)

@@ -1,7 +1,23 @@
 import type { InternalAxiosRequestConfig, AxiosHeaders } from 'axios'
 import { sleep, generateId } from '@/lib/utils'
 import { MOCK_CREDENTIALS, MOCK_USER, MOCK_ACCOUNT, MOCK_TRANSACTIONS } from './data'
-import type { TransferPayload, Transaction } from '@/types'
+import type { Account, TransferPayload, Transaction } from '@/types'
+
+const STORAGE_KEY = '@onda:account'
+
+function getPersistedState(): { account: Account; transactions: Transaction[] } {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      return {
+        account: parsed.state?.account ?? MOCK_ACCOUNT,
+        transactions: parsed.state?.transactions ?? MOCK_TRANSACTIONS,
+      }
+    }
+  } catch { /* fallback to defaults */ }
+  return { account: MOCK_ACCOUNT, transactions: MOCK_TRANSACTIONS }
+}
 
 function mockResponse(data: unknown, status = 200) {
   return {
@@ -14,7 +30,7 @@ function mockResponse(data: unknown, status = 200) {
 }
 
 function mockError(message: string, status: number) {
-  const error = {
+  return {
     response: {
       data: { message },
       status,
@@ -24,7 +40,6 @@ function mockError(message: string, status: number) {
     },
     message,
   }
-  return error
 }
 
 type RouteHandler = (config: InternalAxiosRequestConfig) => Promise<ReturnType<typeof mockResponse>>
@@ -51,6 +66,7 @@ const routes: Record<string, Record<string, RouteHandler>> = {
       if (payload.amount <= 0) {
         throw mockError('Valor inválido para transferência.', 400)
       }
+
       const transaction: Transaction = {
         id: generateId(),
         type: 'transfer',
@@ -61,17 +77,20 @@ const routes: Record<string, Record<string, RouteHandler>> = {
         counterpart: payload.recipientName,
         category: 'Transferência',
       }
+
       return mockResponse(transaction, 201)
     },
   },
   GET: {
     '/api/account': async () => {
       await sleep(600)
-      return mockResponse(MOCK_ACCOUNT)
+      const { account } = getPersistedState()
+      return mockResponse(account)
     },
     '/api/transactions': async () => {
       await sleep(800)
-      return mockResponse(MOCK_TRANSACTIONS)
+      const { transactions } = getPersistedState()
+      return mockResponse(transactions)
     },
   },
 }
